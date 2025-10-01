@@ -2691,6 +2691,13 @@ ProcAllocColor(ClientPtr client)
         return rc;
     }
 
+    if (client->swapped) {
+        swapl(&stuff->cmap);
+        swaps(&stuff->red);
+        swaps(&stuff->green);
+        swaps(&stuff->blue);
+    }
+
     xAllocColorReply rep = {
         .red = stuff->red,
         .green = stuff->green,
