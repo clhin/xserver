@@ -1,0 +1,28 @@
+name: Build Xserver and drivers via MPBT
+
+permissions:
+    contents: write
+
+on:
+    push:
+    pull_request:
+
+jobs:
+    via-mpbt:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out repository code
+              uses: actions/checkout@v4
+
+            - name: pkg install
+              run:  sudo .github/scripts/ubuntu/install-pkg.sh
+
+            - name: install golang
+              run:  sudo apt-get install golang-go
+
+            - name: install mpbt package
+              run: go install github.com/metux/mpbt/cmd/mpbt-builder@latest
+
+            - name: build Xserver and drivers
+              run: |
+                    ~/go/bin/mpbt-builder -root . -solution .mpbt/cf/xlibre/solutions/github.yaml build
